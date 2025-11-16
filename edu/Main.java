@@ -1,105 +1,84 @@
-import java.util.Formatter;
-import java.util.Date;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 public class Main {
 
     public static void main(String[] args) {
-        practice17();
-        practice18();
-        practice19();
+        practice20();
+        practice21();
     }
 
-    static void practice17() {
-        // Использование Formatter с различными спецификаторами
-        Formatter formatter = new Formatter();
+    static void practice20() {
+        // Throwable - базовый класс для всех исключений и ошибок
+        // Error - системные ошибки, которые обычно не обрабатываются (OutOfMemoryError, StackOverflowError)
+        // Exception - проверяемые исключения, которые должны обрабатываться (IOException, SQLException)
+        // RuntimeException - непроверяемые исключения (NullPointerException, IllegalArgumentException)
 
-        // %s - строковый спецификатор
-        formatter.format("Строковое значение: %s%n", "Hello World");
-
-        // %d - целочисленный спецификатор
-        formatter.format("Целое число: %d%n", 42);
-
-        // %f - дробное число
-        formatter.format("Дробное число: %.2f%n", 3.14159);
-
-        // %b - логическое значение
-        formatter.format("Логическое значение: %b%n", true);
-
-        // %c - символьный спецификатор
-        formatter.format("Символ: %c%n", 'A');
-
-        System.out.println(formatter.toString());
-        formatter.close();
-
-        // Альтернативный способ с String.format()
-        String formatted = String.format(
-                "Комбинированный пример: %s, %d, %.2f, %b, %c%n",
-                "Text", 100, 2.71828, false, 'Z'
-        );
-        System.out.println(formatted);
+        System.out.println("Классы исключений:");
+        System.out.println("Throwable - базовый класс всех исключений и ошибок");
+        System.out.println("Error - критичные ошибки виртуальной машины");
+        System.out.println("Exception - проверяемые исключения");
+        System.out.println("RuntimeException - непроверяемые исключения");
     }
 
-    static void practice18() {
-        // Метод flush() используется для принудительной записи данных из буфера
-        // Демонстрация с PrintWriter
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
+    static void practice21() {
+        // ArithmeticException - арифметическая ошибка
+        try {
+            int result = 10 / 0;
+        } catch (ArithmeticException e) {
+            System.out.println("ArithmeticException: " + e.getMessage());
+        }
 
-        printWriter.print("Данные в буфере");
-        System.out.println("До flush(): " + stringWriter.toString()); // Пустая строка
+        // ArrayIndexOutOfBoundsException - выход за границы массива
+        try {
+            int[] arr = new int[5];
+            arr[10] = 1;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("ArrayIndexOutOfBoundsException: " + e.getMessage());
+        }
 
-        printWriter.flush(); // Принудительная запись из буфера
-        System.out.println("После flush(): " + stringWriter.toString()); // Данные появятся
+        // IllegalArgumentException - неверный аргумент
+        try {
+            setAge(-5);
+        } catch (IllegalArgumentException e) {
+            System.out.println("IllegalArgumentException: " + e.getMessage());
+        }
 
-        printWriter.close();
+        // ClassCastException - неверное приведение типов
+        try {
+            Object obj = "String";
+            Integer num = (Integer) obj;
+        } catch (ClassCastException e) {
+            System.out.println("ClassCastException: " + e.getMessage());
+        }
 
-        // Пример с Formatter
-        StringBuilder sb = new StringBuilder();
-        Formatter formatter = new Formatter(sb);
+        // NullPointerException - обращение к null ссылке
+        try {
+            String str = null;
+            str.length();
+        } catch (NullPointerException e) {
+            System.out.println("NullPointerException: " + e.getMessage());
+        }
 
-        formatter.format("Форматированные данные: %d%n", 123);
-        System.out.println("До flush(): " + sb.toString()); // Данные уже есть, т.к. StringBuilder
-
-        formatter.flush(); // Для Formatter с потоком вывода flush важен
-        formatter.close();
+        // Множественная обработка исключений
+        try {
+            riskyOperation();
+        } catch (ArithmeticException | NullPointerException e) {
+            System.out.println("Общая обработка: " + e.getClass().getSimpleName());
+        } finally {
+            System.out.println("Блок finally выполняется всегда");
+        }
     }
 
-    static void practice19() {
-        Date currentDate = new Date();
-        Formatter formatter = new Formatter();
+    static void setAge(int age) {
+        if (age < 0) {
+            throw new IllegalArgumentException("Возраст не может быть отрицательным");
+        }
+    }
 
-        // %tH - часы (00-23)
-        formatter.format("Текущий час: %tH%n", currentDate);
-
-        // %tM - минуты
-        formatter.format("Текущие минуты: %tM%n", currentDate);
-
-        // %tS - секунды
-        formatter.format("Текущие секунды: %tS%n", currentDate);
-
-        // %tY - год (4 цифры)
-        formatter.format("Текущий год: %tY%n", currentDate);
-
-        // %tB - полное название месяца
-        formatter.format("Текущий месяц: %tB%n", currentDate);
-
-        System.out.println(formatter.toString());
-        formatter.close();
-
-        // Комбинированный формат даты и времени
-        String dateTime = String.format(
-                "Полная дата: %tH:%tM:%tS %td.%tm.%tY%n",
-                currentDate, currentDate, currentDate, currentDate, currentDate, currentDate
-        );
-        System.out.println(dateTime);
-
-        // Альтернативный синтаксис с индексом аргумента
-        String indexed = String.format(
-                "Дата: %1$tA, %1$td %1$tB %1$tY года%nВремя: %1$tH:%1$tM:%1$tS",
-                currentDate
-        );
-        System.out.println(indexed);
+    static void riskyOperation() {
+        // Может выбросить разные исключения
+        if (Math.random() > 0.5) {
+            throw new ArithmeticException("Арифметическая ошибка");
+        } else {
+            throw new NullPointerException("Null ссылка");
+        }
     }
 }
